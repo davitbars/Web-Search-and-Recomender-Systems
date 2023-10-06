@@ -15,14 +15,13 @@ import string
 def connectDataBase():
     try:
         conn = psycopg2.connect(
-            dbname="your_database_name",
-            user="your_database_user",
-            password="your_database_password",
-            host="your_database_host",
-            port="your_database_port"
+            dbname="Assignment2",
+            user="postgres",
+            password="dbpass",
+            host="localhost",
+            port="5432"
         )
-        cur = conn.cursor()
-        return conn, cur
+        return conn
     except psycopg2.Error as e:
         print("Error connecting to the database:", e)
 
