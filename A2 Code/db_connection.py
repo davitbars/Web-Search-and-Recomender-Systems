@@ -40,7 +40,10 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
         catId = cur.fetchone()[0]
 
         # 2 Insert the document in the database. For num_chars, discard the spaces and punctuation marks.
-        num_chars = len(docText) - docText.count(' ') - docText.count(string.punctuation)
+        # num_chars = len(docText) - docText.count(' ') - docText.count("!@#$%^&*()_+[]{};:'\"<>,.?/~`")
+        custom_punctuation = "!@#$%^&*()_+[]{};:'\"<>,.?/~`"  # Customize this list as needed
+        num_chars = len(docText) - docText.count(' ') - sum(docText.count(p) for p in custom_punctuation)
+
         cur.execute("INSERT INTO Documents(doc_number, text, title, num_chars, date, category_id) VALUES (%s, %s, %s, %s, %s, %s)", (docId, docText, docTitle, num_chars, docDate, catId))
 
         # 3 Update the potential new terms.
@@ -48,6 +51,7 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
         # 3.2 For each term identified, check if the term already exists in the database
         # 3.3 In case the term does not exist, insert it into the database
         terms = set([term.strip(string.punctuation).lower() for term in docText.split()])
+
         for term in terms:
             cur.execute("INSERT INTO Terms(term, num_chars) VALUES (%s, %s) ON CONFLICT DO NOTHING",(term, len(term)))
 
@@ -56,7 +60,7 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
         # 4.2 Create a data structure the stores how many times (count) each term appears in the document
         # 4.3 Insert the term and its corresponding count into the database
         for term in terms:
-            count = docText.count(term)
+            count = docText.lower().count(term)
             cur.execute("INSERT INTO Document_Term_Relationship(doc_number, term, count) VALUES (%s, %s, %s)", (docId, term, count))
 
         cur.connection.commit()
@@ -74,18 +78,15 @@ def deleteDocument(cur, docId):
 
         for term in terms:
             cur.execute("DELETE FROM Document_Term_Relationship WHERE doc_number = %s AND term = %s", (docId, term))
-
             # Check if there are no more occurrences of the term in another document
             cur.execute("SELECT COUNT(*) FROM Document_Term_Relationship WHERE term = %s", (term,))
             count = cur.fetchone()[0]
             if count == 0:
                 cur.execute("DELETE FROM Terms WHERE term = %s", (term,))
 
-        
         # 2 Delete the document from the database
         cur.execute("DELETE FROM Documents WHERE doc_number = %s", (docId,))
         cur.connection.commit()
-
 
     except psycopg2.Error as e:
         print("Error deleting document:", e)
