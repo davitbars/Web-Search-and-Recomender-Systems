@@ -41,7 +41,7 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
 
         # 2 Insert the document in the database. For num_chars, discard the spaces and punctuation marks.
         num_chars = len(docText) - docText.count(' ') - docText.count(string.punctuation)
-        cur.execute("INSERT INTO Documents(doc_number, text, title, num_chars, date) VALUES (%s, %s, %s, %s, %s)", (docId, docText, docTitle, num_chars, docDate))
+        cur.execute("INSERT INTO Documents(doc_number, text, title, num_chars, date, category_id) VALUES (%s, %s, %s, %s, %s, %s)", (docId, docText, docTitle, num_chars, docDate, catId))
 
         # 3 Update the potential new terms.
         # 3.1 Find all terms that belong to the document. Use space " " as the delimiter character for terms and Remember to lowercase terms and remove punctuation marks.
