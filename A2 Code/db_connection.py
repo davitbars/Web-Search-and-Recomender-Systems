@@ -15,7 +15,7 @@ import string
 def connectDataBase():
     try:
         conn = psycopg2.connect(
-            dbname="Assignment2",
+            dbname="corpus",
             user="postgres",
             password="dbpass",
             host="localhost",
