@@ -3,10 +3,7 @@
 # FILENAME: db_connection.py
 # SPECIFICATION: Perform some database functionalities
 # FOR: CS 4250- Assignment #2
-# TIME SPENT: how long it took you to complete the assignment
 #-----------------------------------------------------------*/
-
-#IMPORTANT NOTE: DO NOT USE ANY ADVANCED PYTHON LIBRARY TO COMPLETE THIS CODE SUCH AS numpy OR pandas. You have to work here only with standard arrays
 
 #importing some Python libraries
 import psycopg2
@@ -106,7 +103,6 @@ def getIndex(cur):
 
     # Query the database to return the documents where each term occurs with their corresponding count. Output example:
     # {'baseball':'Exercise:1','summer':'Exercise:1,California:1,Arizona:1','months':'Exercise:1,Discovery:3'}
-    # ...
     try:
         cur.execute("SELECT term, ARRAY_AGG(DISTINCT title || ':' || count) FROM Document_Term_Relationship " +
                     "JOIN Documents ON Document_Term_Relationship.doc_number = Documents.doc_number " +

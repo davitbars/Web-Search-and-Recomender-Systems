@@ -3,11 +3,7 @@
 # FILENAME: db_connection_mongo.py
 # SPECIFICATION: MongoDB operations functions
 # FOR: CS 4250- Assignment #2
-# TIME SPENT: how long it took you to complete the assignment
 #-----------------------------------------------------------*/
-
-#IMPORTANT NOTE: DO NOT USE ANY ADVANCED PYTHON LIBRARY TO COMPLETE THIS CODE SUCH AS numpy OR pandas. You have to work here only with
-# standard arrays
 
 #importing some Python libraries
 from bson import ObjectId

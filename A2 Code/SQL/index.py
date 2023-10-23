@@ -1,26 +1,24 @@
 #-------------------------------------------------------------------------
 # AUTHOR: Davit Barseghyan
-# FILENAME: index_mongo.py
-# SPECIFICATION: driver code for pythong mongo_db operations
+# FILENAME: index.py
+# SPECIFICATION: Perform some database functionalities
 # FOR: CS 4250- Assignment #2
-# TIME SPENT: how long it took you to complete the assignment
-#-----------------------------------------------------------*/
 
-from pymongo import MongoClient  # import mongo client to connect
-from db_connection_mongo import *
+#importing some Python libraries
+from db_connection import *
 
 if __name__ == '__main__':
 
     # Connecting to the database
-    db = connectDataBase()
+    conn = connectDataBase()
 
-    # Creating a collection
-    documents = db.documents
+    # Getting a cursor
+    cur = conn.cursor()
 
     #print a menu
     print("")
     print("######### Menu ##############")
-    #print("#a - Create a category.")
+    print("#a - Create a category.")
     print("#b - Create a document")
     print("#c - Update a document")
     print("#d - Delete a document.")
@@ -33,7 +31,15 @@ if __name__ == '__main__':
           print("")
           option = input("Enter a menu choice: ")
 
-          if (option == "b"):
+          if (option == "a"):
+
+              catId = input("Enter the ID of the category: ")
+              catName = input("Enter the name of the category: ")
+
+              createCategory(cur, catId, catName)
+              conn.commit()
+
+          elif (option == "b"):
 
               docId = input("Enter the ID of the document: ")
               docText = input("Enter the text of the document: ")
@@ -41,7 +47,8 @@ if __name__ == '__main__':
               docDate = input("Enter the date of the document: ")
               docCat = input("Enter the category of the document: ")
 
-              createDocument(documents, docId, docText, docTitle, docDate, docCat)
+              createDocument(cur, docId, docText, docTitle, docDate, docCat)
+              conn.commit()
 
           elif (option == "c"):
 
@@ -51,17 +58,21 @@ if __name__ == '__main__':
               docDate = input("Enter the date of the document: ")
               docCat = input("Enter the category of the document: ")
 
-              updateDocument(documents, docId, docText, docTitle, docDate, docCat)
+              updateDocument(cur, docId, docText, docTitle, docDate, docCat)
+
+              conn.commit()
 
           elif (option == "d"):
 
               docId = input("Enter the document id to be deleted: ")
 
-              deleteDocument(documents, docId)
+              deleteDocument(cur, docId)
+
+              conn.commit()
 
           elif (option == "e"):
 
-              index = getIndex(documents)
+              index = getIndex(cur)
               print(index)
 
           elif (option == "q"):
